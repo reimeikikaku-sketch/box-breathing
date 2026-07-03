@@ -74,27 +74,19 @@ export default function BoxBreathing() {
   const audioCtxRef = useRef(null);
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        if (window.storage && window.storage.get) {
-          const result = await window.storage.get("history");
-          if (!cancelled && result && result.value) {
-            setHistory(JSON.parse(result.value));
-          }
-        }
-      } catch (e) {
-        // no history yet, that's fine
-      } finally {
-        if (!cancelled) setHistoryLoaded(true);
+    try {
+      const saved = localStorage.getItem("boxBreathingHistory");
+      if (saved) {
+        setHistory(JSON.parse(saved));
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
+    } catch (e) {
+      // no history yet, that's fine
+    } finally {
+      setHistoryLoaded(true);
+    }
   }, []);
 
-  const recordToday = useCallback(async (setsCompleted) => {
+  const recordToday = useCallback((setsCompleted) => {
     const key = todayKey();
     setHistory((prev) => {
       const updated = {
@@ -102,9 +94,7 @@ export default function BoxBreathing() {
         [key]: (prev[key] || 0) + setsCompleted,
       };
       try {
-        if (window.storage && window.storage.set) {
-          window.storage.set("history", JSON.stringify(updated)).catch(() => {});
-        }
+        localStorage.setItem("boxBreathingHistory", JSON.stringify(updated));
       } catch (e) {
         // storage unavailable, keep going with in-memory state
       }

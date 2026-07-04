@@ -1,0 +1,15 @@
+{
+  "name": "Box Breathing",
+  "short_name": "BoxBreathing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#161c34",
+  "theme_color": "#161c34",
+  "icons": [
+    {
+      "src": "/IMG_0936.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
